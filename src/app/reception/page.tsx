@@ -18,7 +18,7 @@ const Reception = () => {
       
       const enderecoMap: { [key: number]: string } = {};
       for (const pedido of pedidosData) {
-        const enderecoData = await enderecoService.getPedidos(); 
+        const enderecoData = await enderecoService.getEnderecos(); 
         enderecoMap[pedido.id] = enderecoData; 
       }
 
@@ -55,7 +55,7 @@ const Reception = () => {
 
   return (
     <div className="reception-container">
-      <img src="tdnow.png" alt="Logo" className="logo" />
+      <img src="https://media.licdn.com/dms/image/v2/D4D0BAQE-pAEH-IZe5w/company-logo_200_200/company-logo_200_200/0/1700770947255/tdnow_logo?e=2147483647&v=beta&t=MrFeyP8u0yOb0wkl1GfCs3kK2_hx95jw7_loN7CdLkM" alt="Logo" className="logo" />
       <h1>Pedidos</h1>
       <table>
         <thead>

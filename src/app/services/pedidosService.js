@@ -12,13 +12,16 @@ const getPedidos = async () => {
       }
   
       const data = await response.json();
+      const usercpf = data.user_cpf;
       return data;
     } catch (error) {
       console.error('Erro ao buscar pedidos:', error);
       return [];
     }
   };
+
   
+
   export default {
     getPedidos,
   };

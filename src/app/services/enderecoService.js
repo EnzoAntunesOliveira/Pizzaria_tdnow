@@ -1,6 +1,6 @@
-const getPedidos = async () => {
+const getEnderecos = async () => {
     try {
-      const response = await fetch('https://3z0nnhl1-3000.brs.devtunnels.ms/enderecos/', {
+      const response = await fetch(`https://3z0nnhl1-3000.brs.devtunnels.ms/enderecos/`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -18,8 +18,9 @@ const getPedidos = async () => {
       return 'Endereço não disponível';
     }
   };
+
   
   export default {
-    getPedidos,
+    getEnderecos,
   };
   
