@@ -1,36 +1,39 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Sistema de Gestão de Pedidos e Entregas
 
-## Getting Started
+Este projeto tem como objetivo desenvolver um sistema de gestão de pedidos para uma empresa, onde o dono pode visualizar e organizar os pedidos dos clientes. Futuramente, o sistema permitirá acessar o histórico de pedidos de cada cliente e gerenciar o processo de entrega, incluindo o monitoramento dos entregadores.
 
-First, run the development server:
+## Tecnologias Utilizadas
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **React.js**: Biblioteca JavaScript para a criação de interfaces de usuário.
+- **Next.js**: Framework React para desenvolvimento de aplicações web com renderização do lado do servidor.
+- **CSS**: Para estilização de componentes.
+- **API REST**: Integração com backend para gerenciamento de pedidos, endereços e login.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Funcionalidades Implementadas
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 1. **Login**
+O sistema possui uma tela de login onde o usuário (dono) pode se autenticar, digitando seu email e senha.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Componentes**: 
+  - `LoginButton`: Componente reutilizável de botão para efetuar o login.
+  - `getLogin`: Função responsável por realizar o login utilizando a API.
 
-## Learn More
+### 2. **Visualização de Pedidos**
+Após o login, o usuário pode visualizar a lista de pedidos feitos pelos clientes, incluindo informações como:
+- ID do pedido
+- Data e hora
+- Valor
+- Endereço do cliente
+- Descrição do pedido
+- Status de entrega
 
-To learn more about Next.js, take a look at the following resources:
+### 3. **Download de Pedidos**
+O sistema permite ao usuário fazer o download de um arquivo PDF com os detalhes de cada pedido, diretamente da tabela.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 4. **Estilização**
+O sistema está estilizado utilizando CSS para criar uma interface amigável e intuitiva, com foco na responsividade e na organização dos elementos visuais.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Funcionalidades Futuras
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Histórico de pedidos de cada cliente.
+- Gestão de entregas com acompanhamento em tempo real dos motoboys.
