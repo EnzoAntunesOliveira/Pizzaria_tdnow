@@ -2,8 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import './styles.css';
-import receptionService from '../services/pedidosService'; 
-import enderecoService from '../services/enderecoService';  
+import { getPedidos, getEnderecoPorUsuario } from '../services/pedidosService'; 
 
 const Reception = () => {
   const [pedidos, setPedidos] = useState<any[]>([]); 
@@ -12,14 +11,18 @@ const Reception = () => {
   useEffect(() => {
     
     const fetchPedidos = async () => {
-      const pedidosData = await receptionService.getPedidos(); 
+      const pedidosData = await getPedidos(); 
       setPedidos(pedidosData);
 
-      
       const enderecoMap: { [key: number]: string } = {};
       for (const pedido of pedidosData) {
-        const enderecoData = await enderecoService.getEnderecos(); 
-        enderecoMap[pedido.id] = enderecoData; 
+        const cpf = pedido.cpf; 
+        if (cpf) { 
+          const enderecoData = await getEnderecoPorUsuario(cpf); 
+          enderecoMap[pedido.id] = enderecoData ? enderecoData : 'Endereço não disponível'; 
+        } else {
+          enderecoMap[pedido.id] = 'CPF não disponível'; 
+        }
       }
 
       setEnderecos(enderecoMap); 
