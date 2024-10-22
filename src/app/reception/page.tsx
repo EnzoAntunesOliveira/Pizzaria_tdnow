@@ -6,26 +6,34 @@ import { getPedidos, getEnderecoPorUsuario } from '../services/pedidosService';
 
 const Reception = () => {
   const [pedidos, setPedidos] = useState<any[]>([]); 
-  const [enderecos, setEnderecos] = useState<{ [key: number]: string }>({}); 
+  const [enderecos, setEnderecos] = useState<{ [key: number]: any }>({}); 
 
   useEffect(() => {
-    
     const fetchPedidos = async () => {
-      const pedidosData = await getPedidos(); 
-      setPedidos(pedidosData);
+      try {
+        const pedidosData = await getPedidos(); 
+        setPedidos(pedidosData);
 
-      const enderecoMap: { [key: number]: string } = {};
-      for (const pedido of pedidosData) {
-        const cpf = pedido.cpf; 
-        if (cpf) { 
-          const enderecoData = await getEnderecoPorUsuario(cpf); 
-          enderecoMap[pedido.id] = enderecoData ? enderecoData : 'Endereço não disponível'; 
-        } else {
-          enderecoMap[pedido.id] = 'CPF não disponível'; 
+        if (!pedidosData || pedidosData.length === 0) {
+          return; 
         }
-      }
 
-      setEnderecos(enderecoMap); 
+        const enderecoMap: { [key: number]: any } = {};
+        const enderecoPromises = pedidosData.map(async (pedido: { id: number; user_cpf: string; pedido_id: number }) => {
+          const cpf = pedido.user_cpf;
+          if (cpf) { 
+            const enderecoData = await getEnderecoPorUsuario(cpf); 
+            enderecoMap[pedido.pedido_id] = enderecoData || 'Endereço não disponível'; 
+          } else {
+            enderecoMap[pedido.pedido_id] = 'CPF não disponível'; 
+          }
+        });
+
+        await Promise.all(enderecoPromises);
+        setEnderecos(enderecoMap);
+      } catch (error) {
+        console.error('Erro ao buscar pedidos:', error);
+      }
     };
 
     fetchPedidos();
@@ -64,34 +72,44 @@ const Reception = () => {
         <thead>
           <tr>
             <th>ID</th>
-            <th>DataHora</th>
-            <th>Valor</th>
+            <th>Total</th>
             <th>Local</th>
-            <th>Pedido</th>
+            <th>Pedidos</th>
             <th>Entregue</th>
             <th>Ações</th>
           </tr>
         </thead>
         <tbody>
-          {pedidos.map((p) => (
-            <tr key={p.id} id={`pedido-${p.id}`}>
-              <td data-label="ID">{p.id}</td>
-              <td data-label="DataHora">{p.dataHora}</td>
-              <td data-label="Valor">{p.valor}</td>
-              <td data-label="Local">{enderecos[p.id] || 'Endereço não disponível'}</td>
-              <td data-label="Pedido">{p.pedido}</td>
-              <td data-label="Entregue"><input type="checkbox" /></td>
-              <td data-label="Ações">
-                <button className="print-button" onClick={() => downloadPedido(p.id)}>
-                  Imprimir Pedido
-                </button>
-              </td>
-            </tr>
-          ))}
+        {pedidos.map((p) => (
+          <tr key={p.pedido_id} id={`pedido-${p.pedido_id}`}>
+            <td data-label="ID">{p.pedido_id}</td>
+            <td data-label="Total">
+              {`R$ ${parseFloat(p.total_compra).toFixed(2)}`}
+            </td>
+            <td data-label="Local">
+              {typeof enderecos[p.pedido_id] === 'object'
+                ? `${enderecos[p.pedido_id]?.rua}, ${enderecos[p.pedido_id]?.numero} - ${enderecos[p.pedido_id]?.bairro}`
+                : enderecos[p.pedido_id] || 'Endereço não disponível'}
+            </td>
+            <td data-label="Pedidos">
+              {p.pizzas.map((pizza: { pizza_nome: string; pizza_tamanho: string; quantidade: number }, index: number) => (
+                <div key={index}>
+                  {`${pizza.quantidade}x ${pizza.pizza_nome} (${pizza.pizza_tamanho})`}
+                </div>
+              ))}
+            </td>
+            <td data-label="Entregue"><input type="checkbox" /></td>
+            <td data-label="Ações">
+              <button className="print-button" onClick={() => downloadPedido(p.pedido_id)}>
+                Imprimir Pedido
+              </button>
+            </td>
+          </tr>
+        ))}
         </tbody>
       </table>
     </div>
   );
-};
+}
 
 export default Reception;
