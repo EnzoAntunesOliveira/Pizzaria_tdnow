@@ -80,32 +80,38 @@ const Reception = () => {
           </tr>
         </thead>
         <tbody>
-        {pedidos.map((p) => (
-          <tr key={p.pedido_id} id={`pedido-${p.pedido_id}`}>
-            <td data-label="ID">{p.pedido_id}</td>
-            <td data-label="Pedidos">
-              {p.pizzas.map((pizza: { pizza_nome: string; pizza_tamanho: string; quantidade: number }, index: number) => (
-                <div key={index}>
-                  {`${pizza.quantidade}x ${pizza.pizza_nome} (${pizza.pizza_tamanho})`}
-                </div>
-              ))}
-            </td>
-            <td data-label="Local">
-              {typeof enderecos[p.pedido_id] === 'object'
-                ? `${enderecos[p.pedido_id]?.rua}, ${enderecos[p.pedido_id]?.numero} - ${enderecos[p.pedido_id]?.bairro}`
-                : enderecos[p.pedido_id] || 'Endereço não disponível'}
-            </td>
-            <td data-label="Total">
-              {`R$ ${parseFloat(p.total_compra).toFixed(2)}`}
-            </td>
-            <td data-label="Entregue"><input type="checkbox" /></td>
-            <td data-label="Ações">
-              <button className="print-button" onClick={() => downloadPedido(p.pedido_id)}>
-                Imprimir Pedido
-              </button>
-            </td>
-          </tr>
-        ))}
+        {pedidos.map((p) => {
+          const pizzaNomes = p.pizzas[0].pizza_nome.split(',');
+          const pizzaTamanhos = p.pizzas[0].pizza_tamanho.split(',');
+          const pizzaQuantidades = p.pizzas[0].quantidade.split(',');
+
+          return (
+            <tr key={p.pedido_id} id={`pedido-${p.pedido_id}`}>
+              <td data-label="ID">{p.pedido_id}</td>
+              <td data-label="Pedidos">
+                {pizzaNomes.map((nome: string, index: number) => (
+                  <div key={index}>
+                    {`${pizzaQuantidades[index]}x ${nome} (${pizzaTamanhos[index]})`}
+                  </div>
+                ))}
+              </td>
+              <td data-label="Local">
+                {typeof enderecos[p.pedido_id] === 'object'
+                  ? `${enderecos[p.pedido_id]?.rua}, ${enderecos[p.pedido_id]?.numero} - ${enderecos[p.pedido_id]?.bairro}`
+                  : enderecos[p.pedido_id] || 'Endereço não disponível'}
+              </td>
+              <td data-label="Total">
+                {`R$ ${parseFloat(p.total_compra).toFixed(2)}`}
+              </td>
+              <td data-label="Entregue"><input type="checkbox" /></td>
+              <td data-label="Ações">
+                <button className="print-button" onClick={() => downloadPedido(p.pedido_id)}>
+                  Imprimir Pedido
+                </button>
+              </td>
+            </tr>
+          );
+        })}
         </tbody>
       </table>
     </div>
